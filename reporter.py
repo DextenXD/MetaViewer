@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 from extractors.pdf import extract_pdf
 from extractors.image import extract_image
+from extractors.document import extract_doc
 
 
 def main(filepath, formatType):
@@ -10,6 +11,8 @@ def main(filepath, formatType):
         pdfReporter(filepath, formatType)
     elif filepath.suffix.lower() in [".png", ".jpeg", ".jpg", ".webp", ".gif"]:
         imageReporter(filepath, formatType)
+    elif filepath.suffix.lower() == ".docx":
+        docuReporter(filepath, formatType)
 
 
 def pdfReporter(filepath, formatType):
@@ -51,3 +54,23 @@ def imageReporter(filepath, formatType):
             f.write(data)
     else:
         print("Please select json or text :D")
+
+def docuReporter(filepath, formatType):
+    data = extract_doc(filepath)
+    if data is None:
+        print("Could not extract data :(")
+        return
+    if formatType.lower() == "text":
+        if os.path.exists("docReport.txt"):
+            os.remove("docReport.txt")
+        with open("docReport.txt", "a") as f:
+            for key, value in data.items():
+                f.write(f"{str(key)}: {str(value)} \n")
+    elif formatType.lower() == "json":
+        if os.path.exists("docReport.json"):
+            os.remove("docReport.json")
+        with open("docReport.json", "a") as f:
+            f.write(data)
+    else:
+        print("Please select json or text :D")
+        

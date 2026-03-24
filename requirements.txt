@@ -1,5 +1,4 @@
 Pillow
 exifread
 PyPDF2
-mutagen
 python-docx
